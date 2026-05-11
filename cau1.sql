@@ -193,7 +193,8 @@ select * from Patient_Invoices;
 
 -- Sự cố "tiền đã trừ nhưng nợ không giảm" đang vi phạm đặc tính Atomicity (hoặc thực hiện hết hoặc ko thực hiện j cả)
 -- nghĩa là vì đặc tính đó, cơ sở dữ liệu nhận thấy giao dịch đang chưa hoàn tất và bị gián đoạn giữa chừng, ko chạy lệnh sau nữa
--- nên tốt nhất là phải thêm rollback để khi kết nối bị ngắt vẫn có thể khôi phục trở lại trạng thái ban đầu
+-- nên trường hợp đang mô phỏng lỗi thì thêm rollback để khi kết nối bị ngắt vẫn có thể khôi phục trở lại trạng thái ban đầu
+
 
 -- sửa
 drop procedure PayHospitalFee;
