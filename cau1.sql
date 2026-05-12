@@ -193,7 +193,7 @@ select * from Patient_Invoices;
 
 -- Sự cố "tiền đã trừ nhưng nợ không giảm" đang vi phạm đặc tính Atomicity (hoặc thực hiện hết hoặc ko thực hiện j cả)
 -- nghĩa là vì đặc tính đó, cơ sở dữ liệu nhận thấy giao dịch đang chưa hoàn tất và bị gián đoạn giữa chừng, ko chạy lệnh sau nữa
--- nên trường hợp đang mô phỏng lỗi thì thêm rollback để khi kết nối bị ngắt vẫn có thể khôi phục trở lại trạng thái ban đầu
+-- có thể dùng cấu trúc DECLARE EXIT HANDLER FOR SQLEXCEPTION và đặt rollback vào trong để các câu lệnh có bị lỗi trừ cũng sẽ có thể rollback lại về ban đầu
 
 
 -- sửa
@@ -215,6 +215,7 @@ BEGIN
 
     -- Bước 2: Giảm trừ công nợ (Lệnh này không kịp chạy)
     UPDATE Patient_Invoices SET total_due = total_due - p_amount WHERE patient_id = p_patient_id;
+	COMMIT;
 END //
 
 DELIMITER ;
