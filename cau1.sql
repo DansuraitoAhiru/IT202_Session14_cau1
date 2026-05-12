@@ -202,11 +202,15 @@ DELIMITER //
 
 CREATE PROCEDURE PayHospitalFee(IN p_patient_id INT, IN p_amount DECIMAL(18,2))
 BEGIN
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
 	START TRANSACTION;
     -- Bước 1: Trừ tiền trong ví
     UPDATE Wallets SET balance = balance - p_amount WHERE patient_id = p_patient_id;
 
-	ROLLBACK;
     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Lỗi: Hệ thống gặp sự cố mạng đột ngột!';
 
     -- Bước 2: Giảm trừ công nợ (Lệnh này không kịp chạy)
